@@ -63,4 +63,5 @@ def generate ():
 
     return render_template ("generate.html", img_b64=img_b64)
 
-app.run ()
+if __name__ == "__main__":
+    app.run ()
