@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+  <title>Wordcloud Generator</title>
+  <meta charset="utf-8">
+  <link rel="stylesheet" href="static/style.css">
+
+  <script type="text/javascript" src="static/script.js"></script>
+
+</head>
+
+<body>
+
+  <img src="static/logo.png" alt="Logo">
+
+  <form action="/generate" method="post">
+
+    <fieldset>
+    <legend><strong>Data</strong></legend>
+    <div id="word-section">
+      <div class="data-row">
+        Word <input type="text" name="word" placeholder="Insert here a word" required>
+        Frequency <input type="number" name="frequency" placeholder="Insert here a frequency" min="1" required>
+        <a href="#" title="Delete this row" class="delete-button" onclick="if (document.getElementsByClassName('data-row').length > 1) this.parentNode.remove ()">Delete</a>
+      </div>
+    </div>
+    <br><input type="button" value="Add word" onclick="clone_row()"> (Or press "+" on your keyboard)
+    </fieldset>
+
+    <fieldset>
+    <legend><strong>Basic configuration</strong></legend>
+    <div class="form-row">
+      Width (Max {{max_width}} pixel) <input type="number" name="width" value="800" min="1" max="{{max_width}}">
+      Height (Max {{max_height}} pixel) <input type="number" name="height" value="600" min="1" max="{{max_height}}">
+    </div>
+    <div class="form-row">
+      Background color <input type="color" name="bgcolor">
+      Color map
+    <select name="colormap">
+      {% for map in colormap_list %}
+      <option value="{{map}}">{{map}}</option>
+      {% endfor %}
+    </select>
+    <a href="#" onclick="show_colormaps()" title="Show/hide color maps">Show/hide color maps</a>
+    </div>
+
+    <div id="colormaps">
+      <img src="static/colormap1.webp"><br>
+      <img src="static/colormap2.webp"><br>
+      <img src="static/colormap3.webp"><br>
+      <img src="static/colormap4.webp"><br>
+      <img src="static/colormap5.webp"><br>
+      <img src="static/colormap6.webp"><br>
+      <img src="static/colormap7.webp">
+    </div>
+
+    </fieldset>
+
+    <fieldset>
+    <legend><strong>Advanced configuration</strong></legend>
+    <div class="form-row">
+      <input type="checkbox" name="monocolor-enabled">
+      Mono color (this overwrites the colormap selection) <input type="color" name="monocolor">
+    </div>
+    <div class="form-row">
+      Horizontal preference <input type="number" name="prefer_horizontal" value="0.90" min="0" max="1" step="0.01">
+      Relative scaling <input type="number" name="relative_scaling" value="0.50" min="0" max="1" step="0.01">
+      <a href="#" onclick="show_help ()" title="Show/hide help">Show/hide help</a>
+      <div id="help">
+        <h5>Horizontal preference</h5>
+        <p class="help-text">The ratio of times that the algorithm tries to fit the words horizontal instead of vertical. If set to "1" vertical words will not be generated.</p>
+        <h5>Relative scaling</h5>
+        <p class="help-text">
+          If this parameter is set to "1", font size of the words will be directly proportional to the frequencies.
+          If set to "0", only word ranking will be relevant for determining the font size.
+          Setting relative scaling somewhere in the middle between 0 and 1 will produce the best results from an aesthetic point of view.
+        </p>
+      </div>
+    </div>
+    </fieldset>
+
+    <input type="reset" value="Reset">
+    <input type="submit" value="Generate">
+
+  </form>
+
+  <hr>
+  <p>This tool - made by <a href="mailto:larderamarco@hotmail.com">Marco Lardera</a> - is a graphical front-end of the <a href="https://amueller.github.io/word_cloud/">Wordcloud Python package</a></p>
+
+</body>
+
+</html>
