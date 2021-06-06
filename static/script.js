@@ -10,8 +10,8 @@ function clone_row () {
   freq [freq.length -1].value="";
 }
 
-function show_colormaps () {
-  let div=document.getElementById ("colormaps");
+function show_accordion (id) {
+  let div=document.getElementById (id);
   if (div.style.display!="block") {
     div.style.display="block";
   }
@@ -20,14 +20,18 @@ function show_colormaps () {
   }
 }
 
-function show_help () {
-  let div=document.getElementById ("help");
-  if (div.style.display!="block") {
-    div.style.display="block";
-  }
-  else {
-    div.style.display="none";
-  }
+function activate_gen_freq () {
+  document.getElementById ("tab-gen-freq").className = "tab-active"
+  document.getElementById ("tab-gen-text").className = "tab-inactive"
+  document.getElementById ("btn-gen-freq").className = "tab-btn-active"
+  document.getElementById ("btn-gen-text").className = "tab-btn-inactive"
+}
+
+function activate_gen_text () {
+  document.getElementById ("tab-gen-freq").className = "tab-inactive"
+  document.getElementById ("tab-gen-text").className = "tab-active"
+  document.getElementById ("btn-gen-freq").className = "tab-btn-inactive"
+  document.getElementById ("btn-gen-text").className = "tab-btn-active"
 }
 
 document.addEventListener ("keydown", function (event) {

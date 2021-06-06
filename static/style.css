@@ -4,6 +4,12 @@ body {
   font-family: Helvetica,sans-serif;
 }
 
+nav {
+  display: flex;
+  margin-top: 1em;
+  margin-bottom: 1em;
+}
+
 img {
   max-width: 100%;
 }
@@ -12,6 +18,12 @@ fieldset {
   margin-bottom: 1em;
   background-color: #e4e0e0;
   border: 0;
+}
+
+textarea {
+  width: 100%;
+  height: 10em;
+  resize: none;
 }
 
 hr {
@@ -67,19 +79,47 @@ input[type=reset]:active {
   transform: translateY(4px);
 }
 
+.tab-inactive {
+  display: none;
+}
+
+.tab-btn-active {
+  background-color: #2f3230;
+  color: #ffffff;
+  padding: 1em;
+  border: 0;
+}
+
+.tab-btn-inactive {
+  background-color: #e4e0e0;
+  color: #000000;
+  padding: 1em;
+  border: 0;
+}
+
 .form-row {
   margin-bottom: 1em;
+  display:flex;
+  align-items: baseline;
+}
+
+.form-row label {
+  width: 30%;
 }
 
 .help-text {
   font-size: 0.9em;
 }
 
-#colormaps {
+.colormap-link {
+  margin-left: 1em;
+}
+
+#colormaps-1, #colormaps-2 {
   display: none;
 }
 
-#help {
+#help-1, #help-2 {
   display: none;
 }
 

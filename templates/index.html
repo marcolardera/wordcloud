@@ -6,8 +6,10 @@
 
   <title>Wordcloud Generator</title>
   <meta charset="utf-8">
-  <link rel="stylesheet" href="static/style.css">
+  <meta name="description" content="A simple wordcloud generator">
+  <meta nanme="author" content="Marco Lardera">
 
+  <link rel="stylesheet" href="static/style.css">
   <script type="text/javascript" src="static/script.js"></script>
 
 </head>
@@ -16,14 +18,20 @@
 
   <img src="static/logo.png" alt="Logo">
 
-  <form action="/generate" method="post">
+  <nav>
+    <button id="btn-gen-freq" class="tab-btn-active" onclick="activate_gen_freq ()">Generate from frequencies</button>
+    <button id="btn-gen-text" class="tab-btn-inactive" onclick="activate_gen_text ()">Generate from text</button>
+  </nav>
+
+  <div id="tab-gen-freq" class="tab-active">
+  <form action="/generate_from_frequencies" method="post">
 
     <fieldset>
     <legend><strong>Data</strong></legend>
     <div id="word-section">
       <div class="data-row">
-        Word <input type="text" name="word" placeholder="Insert here a word" required>
-        Frequency <input type="number" name="frequency" placeholder="Insert here a frequency" min="1" required>
+        <label>Word <input type="text" name="word" placeholder="Insert here a word" required></label>
+        <label>Frequency <input type="number" name="frequency" placeholder="Insert here a frequency" min="1" required></label>
         <a href="#" title="Delete this row" class="delete-button" onclick="if (document.getElementsByClassName('data-row').length > 1) this.parentNode.remove ()">Delete</a>
       </div>
     </div>
@@ -33,21 +41,28 @@
     <fieldset>
     <legend><strong>Basic configuration</strong></legend>
     <div class="form-row">
-      Width (Max {{max_width}} pixel) <input type="number" name="width" value="800" min="1" max="{{max_width}}">
-      Height (Max {{max_height}} pixel) <input type="number" name="height" value="600" min="1" max="{{max_height}}">
+      <label for="width">Width (Max {{max_width}} pixel)</label>
+      <input type="number" name="width" id="width" value="800" min="1" max="{{max_width}}">
     </div>
     <div class="form-row">
-      Background color <input type="color" name="bgcolor">
-      Color map
-    <select name="colormap">
-      {% for map in colormap_list %}
-      <option value="{{map}}">{{map}}</option>
-      {% endfor %}
-    </select>
-    <a href="#" onclick="show_colormaps()" title="Show/hide color maps">Show/hide color maps</a>
+      <label for="height">Height (Max {{max_height}} pixel)</label>
+      <input type="number" name="height" id="height" value="600" min="1" max="{{max_height}}">
+    </div>
+    <div class="form-row">
+      <label for="bgcolor">Background color</label>
+      <input type="color" name="bgcolor" id="bgcolor">
+    </div>
+    <div class="form-row">
+      <label for="colormap">Color map</label>
+      <select name="colormap" id="colormap">
+        {% for map in colormap_list %}
+        <option value="{{map}}">{{map}}</option>
+        {% endfor %}
+      </select>
+      <a href="javascript:void(0);" class="colormap-link" onclick="show_accordion('colormaps-1')" title="Show/hide color maps">Show/hide color maps</a>
     </div>
 
-    <div id="colormaps">
+    <div id="colormaps-1">
       <img src="static/colormap1.webp"><br>
       <img src="static/colormap2.webp"><br>
       <img src="static/colormap3.webp"><br>
@@ -62,23 +77,114 @@
     <fieldset>
     <legend><strong>Advanced configuration</strong></legend>
     <div class="form-row">
-      <input type="checkbox" name="monocolor-enabled">
-      Mono color (this overwrites the colormap selection) <input type="color" name="monocolor">
+      <label for="monocolor_enabled">Mono color (this overwrites the colormap selection)</label>
+      <input type="checkbox" name="monocolor_enabled" id="monocolor_enabled">
+      <input type="color" name="monocolor">
     </div>
     <div class="form-row">
-      Horizontal preference <input type="number" name="prefer_horizontal" value="0.90" min="0" max="1" step="0.01">
-      Relative scaling <input type="number" name="relative_scaling" value="0.50" min="0" max="1" step="0.01">
-      <a href="#" onclick="show_help ()" title="Show/hide help">Show/hide help</a>
-      <div id="help">
-        <h5>Horizontal preference</h5>
-        <p class="help-text">The ratio of times that the algorithm tries to fit the words horizontal instead of vertical. If set to "1" vertical words will not be generated.</p>
-        <h5>Relative scaling</h5>
-        <p class="help-text">
-          If this parameter is set to "1", font size of the words will be directly proportional to the frequencies.
-          If set to "0", only word ranking will be relevant for determining the font size.
-          Setting relative scaling somewhere in the middle between 0 and 1 will produce the best results from an aesthetic point of view.
-        </p>
-      </div>
+      <label for="prefer_horizontal">Horizontal preference</label>
+      <input type="number" name="prefer_horizontal" id="prefer_horizontal" value="0.90" min="0" max="1" step="0.01">
+    </div>
+    <div class="form-row">
+      <label for="relative_scaling">Relative scaling</label>
+      <input type="number" name="relative_scaling" id="relative_scaling" value="0.50" min="0" max="1" step="0.01">
+    </div>
+    <a href="javascript:void(0);" onclick="show_accordion('help-1')" title="Show/hide help">Show/hide help</a>
+    <div id="help-1">
+      <h5>Horizontal preference</h5>
+      <p class="help-text">The ratio of times that the algorithm tries to fit the words horizontal instead of vertical. If set to "1" vertical words will not be generated.</p>
+      <h5>Relative scaling</h5>
+      <p class="help-text">
+        If this parameter is set to "1", font size of the words will be directly proportional to the frequencies.
+        If set to "0", only word ranking will be relevant for determining the font size.
+        Setting relative scaling somewhere in the middle between 0 and 1 will produce the best results from an aesthetic point of view.
+      </p>
+    </div>
+
+    </fieldset>
+
+    <input type="reset" value="Reset">
+    <input type="submit" value="Generate">
+
+  </form>
+  </div>
+
+  <div id="tab-gen-text" class="tab-inactive">
+  <form action="/generate_from_text" method="post">
+
+    <fieldset>
+    <legend><strong>Data</strong></legend>
+    <label for="input-text">Text</label>
+    <textarea name="input_text" id="input_text" placeholder="Insert here the input text" required></textarea>
+    <label for="stopwords">Stopwords (optional)</label>
+    <textarea name="stopwords" id="stopwords" placeholder="Insert here a list of stopwords - one per line"></textarea>
+    </fieldset>
+
+    <fieldset>
+    <legend><strong>Basic configuration</strong></legend>
+    <div class="form-row">
+      <label for="width">Width (Max {{max_width}} pixel)</label>
+      <input type="number" name="width" id="width" value="800" min="1" max="{{max_width}}">
+    </div>
+    <div class="form-row">
+      <label for="height">Height (Max {{max_height}} pixel)</label>
+      <input type="number" name="height" id="height" value="600" min="1" max="{{max_height}}">
+    </div>
+    <div class="form-row">
+      <label for="max_words">Maximum number of words</label>
+      <input type="number" name="max_words" id="max_words" value="200" min="1">
+    </div>
+    <div class="form-row">
+      <label for="bgcolor">Background color</label>
+      <input type="color" name="bgcolor" id="bgcolor">
+    </div>
+    <div class="form-row">
+      <label for="colormap">Color map</label>
+      <select name="colormap" id="colormap">
+        {% for map in colormap_list %}
+        <option value="{{map}}">{{map}}</option>
+        {% endfor %}
+      </select>
+      <a href="javascript:void(0);" class="colormap-link" onclick="show_accordion('colormaps-2')" title="Show/hide color maps">Show/hide color maps</a>
+    </div>
+
+    <div id="colormaps-2">
+      <img src="static/colormap1.webp"><br>
+      <img src="static/colormap2.webp"><br>
+      <img src="static/colormap3.webp"><br>
+      <img src="static/colormap4.webp"><br>
+      <img src="static/colormap5.webp"><br>
+      <img src="static/colormap6.webp"><br>
+      <img src="static/colormap7.webp">
+    </div>
+
+    </fieldset>
+
+    <fieldset>
+    <legend><strong>Advanced configuration</strong></legend>
+    <div class="form-row">
+      <label for="monocolor_enabled">Mono color (this overwrites the colormap selection)</label>
+      <input type="checkbox" name="monocolor_enabled" id="monocolor_enabled">
+      <input type="color" name="monocolor">
+    </div>
+    <div class="form-row">
+      <label for="prefer_horizontal">Horizontal preference</label>
+      <input type="number" name="prefer_horizontal" id="prefer_horizontal" value="0.90" min="0" max="1" step="0.01">
+    </div>
+    <div class="form-row">
+      <label for="relative_scaling">Relative scaling</label>
+      <input type="number" name="relative_scaling" id="relative_scaling" value="0.50" min="0" max="1" step="0.01">
+    </div>
+    <a href="javascript:void(0);" onclick="show_accordion('help-2')" title="Show/hide help">Show/hide help</a>
+    <div id="help-2">
+      <h5>Horizontal preference</h5>
+      <p class="help-text">The ratio of times that the algorithm tries to fit the words horizontal instead of vertical. If set to "1" vertical words will not be generated.</p>
+      <h5>Relative scaling</h5>
+      <p class="help-text">
+        If this parameter is set to "1", font size of the words will be directly proportional to the frequencies.
+        If set to "0", only word ranking will be relevant for determining the font size.
+        Setting relative scaling somewhere in the middle between 0 and 1 will produce the best results from an aesthetic point of view.
+      </p>
     </div>
     </fieldset>
 
@@ -86,6 +192,7 @@
     <input type="submit" value="Generate">
 
   </form>
+  </div>
 
   <hr>
   <p>This tool - made by <a href="mailto:larderamarco@hotmail.com">Marco Lardera</a> - is a graphical front-end of the <a href="https://amueller.github.io/word_cloud/">Wordcloud Python package</a></p>
