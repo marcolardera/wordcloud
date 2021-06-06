@@ -114,5 +114,9 @@ def generate_text ():
 
     return render_template ("generate.html", img_b64=img_b64)
 
+@app.route ("/ping")
+def ping ():
+    return "OK"
+
 if __name__ == "__main__":
     app.run (debug=True)
