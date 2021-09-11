@@ -20,7 +20,7 @@ def generate_freq ():
     try:
         freqs=[int (i) for i in freqs]
     except:
-        return "Error: one or more frequency value are invalid"
+        return "Error: one or more frequency value are invalid", 400
     wf=dict(zip(words, freqs))
 
     width=int (request.form ["width"])
@@ -33,10 +33,11 @@ def generate_freq ():
     monocolor=request.form ["monocolor"]
 
     #Those checks are implemented for security reasons
+    #In case of POST requests made bypassing the frontend
     if width > max_width:
-        return f"Error: width > {max_width}"
+        return f"Error: width > {max_width}", 400
     if height > max_height:
-        return f"Error: height > {max_height}"
+        return f"Error: height > {max_height}", 400
 
     if monocolor_enabled == "on":
         wc=WordCloud (
@@ -80,6 +81,7 @@ def generate_text ():
     monocolor=request.form ["monocolor"]
 
     #Those checks are implemented for security reasons
+    #In case of POST requests made bypassing the frontend
     if width > max_width:
         return f"Error: width > {max_width}"
     if height > max_height:
@@ -114,9 +116,11 @@ def generate_text ():
 
     return render_template ("generate.html", img_b64=img_b64)
 
+#This endpoint is just for keeping the app always alive using Heroku base plan
+#A cron job makes requests at a regular interval
 @app.route ("/ping")
 def ping ():
-    return "OK"
+    return "OK", 200
 
 if __name__ == "__main__":
-    app.run (debug=True)
+    app.run (debug=False)
