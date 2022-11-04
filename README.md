@@ -2,7 +2,7 @@
 
 This repository contains the source code of Wordcloud Generator, a webapp based on the popular [WordCloud](http://amueller.github.io/word_cloud/) Python package.
 
-The application is currently deployed at [https://wcloud.herokuapp.com/](https://wcloud.herokuapp.com/)
+The application is currently deployed at [https://wordcloud.fly.dev/](https://wordcloud.fly.dev/)
 
 ## Local installation
 
